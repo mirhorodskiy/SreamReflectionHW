@@ -14,7 +14,9 @@ public class ReflectionSandbox {
   // TODO: implement simple class name extraction. This should return: ReflectionSandbox if Object o is instance of ReflectionSandbox.class
   //  And return null if object is null
   public String getSimpleName(Object o) {
-    return "";
+    if (o == null)
+      return null;
+    return o.getClass().getSimpleName();
   }
 
   // TODO: implement fully qualified name extraction.
@@ -22,13 +24,19 @@ public class ReflectionSandbox {
   //  if Object o is instance of ReflectionSandbox.class
   //  And return null if object is null
   public String getFullyQualifiedName(Object o) {
-    return "";
+    if (o == null)
+      return null;
+    return o.getClass().getName();
   }
 
   // TODO: return a value called from private method in HelperClass.veryPrivateMessage
   public String getPrivateMessage()
-      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    return "";
+          throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    HelperClass obj = new HelperClass();
+    Class<?> target = obj.getClass();
+    Method method = target.getDeclaredMethod("veryPrivateMessage");
+    method.setAccessible(true);
+    return (String) method.invoke(obj);
   }
 
   /**
@@ -49,8 +57,8 @@ public class ReflectionSandbox {
    * // !!!! IMPORTANT !!!! : Don't change this method
    */
   public String getCustomAnnotationPropertyFromField()
-      throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException,
-      InvocationTargetException {
+          throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException,
+          InvocationTargetException {
     Field property = helperClass.getClass().getDeclaredField("property");
     Annotation[] annotations = property.getAnnotations();
     for (Annotation annotation : annotations) {
